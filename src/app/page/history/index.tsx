@@ -1,40 +1,15 @@
-import { Card, Col, Row, Typography, Table } from 'antd'
+import moment from 'moment'
+
+import { Card, Col, Row, Typography, Table, Button } from 'antd'
+import { HISTORY_COLUMN } from './column'
 import IonIcon from 'shared/ionicon'
 
-const columns = [
-  {
-    title: 'TIME',
-    dataIndex: 'time',
-    render: (time: string) => (
-      <Typography.Text type="secondary">
-        <IonIcon name="newspaper-outline" />
-        {time}
-      </Typography.Text>
-    ),
-  },
-  {
-    title: 'TRANSACTION',
-    className: 'transaction',
-    dataIndex: 'transaction',
-  },
-  {
-    title: 'PAID',
-    dataIndex: 'paid',
-  },
-  {
-    title: 'AMOUNT',
-    dataIndex: 'amount',
-  },
-  {
-    title: 'STATUS',
-    dataIndex: 'status',
-  },
-]
+import './index.less'
 
 const History = () => {
   const data = {
     key: 0,
-    time: new Date().toDateString(),
+    time: moment().format('DD MMM, YYYY hh:mm'),
     transaction: 'Swap Solana',
     paid: 'Solana - Ethereum',
     amount: 0,
@@ -48,12 +23,24 @@ const History = () => {
 
   return (
     <Card bordered={false}>
-      <Row gutter={[16, 16]}>
+      <Row gutter={[16, 16]} justify="center">
         <Col>
           <Typography.Text>Swap history</Typography.Text>
         </Col>
         <Col span={24}>
-          <Table columns={columns} dataSource={sources} pagination={false} />
+          <Table
+            columns={HISTORY_COLUMN}
+            dataSource={sources}
+            pagination={false}
+            rowClassName={(record, index) =>
+              index % 2 ? 'odd-row' : 'even-row'
+            }
+          />
+        </Col>
+        <Col>
+          <Button type="text" icon={<IonIcon name="chevron-down-outline" />}>
+            View more
+          </Button>
         </Col>
       </Row>
     </Card>
