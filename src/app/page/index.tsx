@@ -8,10 +8,10 @@ import 'app/static/styles/index.less'
 const Page = () => {
   return (
     <Row gutter={[24, 24]}>
-      <Col span={8}>
+      <Col lg={8} md={12} xs={24}>
         <Swap />
       </Col>
-      <Col span={14}>
+      <Col lg={16} md={12} xs={24}>
         <Row gutter={[24, 24]}>
           <Col span={24}>
             <SwapChart />

@@ -4,7 +4,7 @@ import SwapForm from './swapForm'
 
 const Swap = () => {
   return (
-    <Row gutter={[16, 16]}>
+    <Row gutter={[24, 24]}>
       <Col span={24}>
         <SwapForm />
       </Col>

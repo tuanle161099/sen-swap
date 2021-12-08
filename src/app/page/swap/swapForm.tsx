@@ -3,7 +3,7 @@ import Swap from 'app/components/swap'
 
 const SwapForm = () => {
   return (
-    <Card bordered={false}>
+    <Card bordered={false} className="card-swap">
       <Swap onChange={() => {}} />
     </Card>
   )

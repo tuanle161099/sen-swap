@@ -1,5 +1,10 @@
-import { Button } from 'antd'
 import { useCallback, useState } from 'react'
+import { utils } from '@senswap/sen-js'
+import { useSelector } from 'react-redux'
+
+import { Button } from 'antd'
+import { HopData } from './preview/hop'
+import { AppState } from 'app/model'
 import { useWallet } from 'senhub/providers'
 import { explorer } from 'shared/util'
 
@@ -11,20 +16,25 @@ const SwapButton = ({
   disabled = false,
   wrapAmount = BigInt(0),
 }: {
-  hops: any[]
+  hops: HopData[]
   onCallback?: () => void
   disabled?: boolean
   wrapAmount: bigint
 }) => {
   const [loading, setLoading] = useState(false)
+  const bidData = useSelector((state: AppState) => state.bid)
+  const askData = useSelector((state: AppState) => state.ask)
+  const { slippage } = useSelector((state: AppState) => state.settings)
   const {
     wallet: { address: walletAddress },
   } = useWallet()
+
   /**
    * Swap function
    */
   const handleSwap = useCallback(async () => {
     const { swap, splt, wallet } = window.sentre
+    if (!wallet) return
     // Synthetize routings
     const routingAddresses = await Promise.all(
       hops.map(
@@ -49,8 +59,20 @@ const SwapButton = ({
         },
       ),
     )
-    console.log(routingAddresses, swap, wallet)
-  }, [hops, walletAddress])
+    // Compute limit
+    const {
+      srcMintInfo: { decimals: bidDecimals },
+    } = hops[0]
+    const bidAmount = utils.decimalize(bidData.amount, bidDecimals)
+    const {
+      dstMintInfo: { decimals: askDecimals },
+    } = hops[hops.length - 1]
+    const askAmount = utils.decimalize(askData.amount, askDecimals)
+    const limit =
+      (askAmount * (DECIMALS - utils.decimalize(slippage, 9))) / DECIMALS
+    // Execute swap
+    return await swap.route(bidAmount, limit, routingAddresses, wallet)
+  }, [hops, bidData, askData, slippage, walletAddress])
 
   const handleWrapSol = async () => {
     if (!wrapAmount) return
@@ -61,13 +83,13 @@ const SwapButton = ({
 
   const onSwap = async () => {
     try {
-      await setLoading(true)
+      setLoading(true)
       await handleWrapSol()
-      const txId = await handleSwap()
+      const { txId } = (await handleSwap()) || {}
       window.notify({
         type: 'success',
         description: `Swap successfully. Click to view details.`,
-        onClick: () => window.open(explorer(`${txId}`), '_blank'),
+        onClick: () => window.open(explorer(txId || ''), '_blank'),
       })
       return onCallback()
     } catch (er: any) {
@@ -89,4 +111,5 @@ const SwapButton = ({
     </Button>
   )
 }
+
 export default SwapButton

@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { account } from '@senswap/sen-js'
 
-import { Row, Col, Button, Divider } from 'antd'
+import { Row, Col, Button } from 'antd'
 import Bid from './bid'
 import IonIcon from 'shared/ionicon'
 import Ask from './ask'
@@ -20,7 +20,7 @@ import { AppDispatch, AppState } from 'app/model'
 import { usePool } from 'senhub/providers'
 import { updateBidData } from 'app/model/bid.controller'
 import { updateAskData } from 'app/model/ask.controller'
-import PoweredBy from 'os/components/poweredBy'
+import SwapSettings from 'app/page/swap/swapSettings'
 
 const Swap = ({
   onChange = () => {},
@@ -160,10 +160,8 @@ const Swap = ({
       <Col span={24}>
         <Row gutter={[8, 8]} justify="end" align="middle" wrap={false}>
           <Col>
-            <PoweredBy />
+            <SwapSettings />
           </Col>
-          <Divider type="vertical" style={{ margin: 0 }} />
-          <Col>{/* <Settings /> */}</Col>
         </Row>
       </Col>
       <Col span={24}>

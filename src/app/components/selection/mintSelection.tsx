@@ -32,7 +32,6 @@ const MintSelection = ({
   const settings = useSelector((state: AppState) => state.settings)
   const { pools } = usePool()
   const { tokenProvider } = useMint()
-  console.log(pools, 'pools')
 
   // Compute mints that appear in all pools
   const supportedMints = useMemo(() => {
