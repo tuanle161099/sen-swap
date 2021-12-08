@@ -12,12 +12,12 @@ const History = () => {
     time: moment().format('DD MMM, YYYY hh:mm'),
     transaction: 'Swap Solana',
     paid: 'Solana - Ethereum',
-    amount: 0,
+    amount: '',
     status: 'success',
   }
-  const sources = [1, 2, 3, 4, 5].map((e) => {
+  const sources = [1, 2, 3, 4, 5, 6, 7].map((e) => {
     data.key = e
-    data.amount = e * Math.random()
+    data.amount = `${e} SOL`
     return { ...data }
   })
 
@@ -35,6 +35,7 @@ const History = () => {
             rowClassName={(record, index) =>
               index % 2 ? 'odd-row' : 'even-row'
             }
+            scroll={{ x: 800, y: 300 }}
           />
         </Col>
         <Col>
